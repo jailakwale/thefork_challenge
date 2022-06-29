@@ -24,7 +24,7 @@ If there is any error, please check if the Java compiler that you are using is 1
 Goto the project and right click --> Properties --> Java compiler
 
 
-*Execute* - Right click on testng.xml and Run As TestNG suite
+*EXECUTE* - Right click on testng.xml and Run As TestNG suite
 
  
 
