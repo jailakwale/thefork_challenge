@@ -13,8 +13,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -23,16 +21,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 
-import groovy.util.logging.Log;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 
 /**
+ * Base class to initialize driver, read and extract test data and config properties
  * @author Jai
  *
  */
@@ -48,10 +41,8 @@ public class TestBase {
 	public static final String URL = readConfigPropertiesFile("url");
 	public static final String PokemonURL = readConfigPropertiesFile("pokemonurl");
 	public WebDriver driver = null;
-	Logger log = LogManager.getLogger();
+	
 
-	
-	
 	/**
 	 * Gets the browser driver
 	 * 
@@ -156,30 +147,17 @@ public class TestBase {
 	 * @throws ParseException
 	 */
 	public static String readDataFromJson(String testCaseName, String key) throws IOException, ParseException{
-		//LOG.trace("tryign to read for testData.JSON file at file path ->"+TESTDATAFILEPATH+", Key : "+key);
+		
 		FileInputStream fis= new FileInputStream(TESTDATAFILEPATH);
-		InputStreamReader isr= new InputStreamReader(fis);
-		//BufferedReader br= new BufferedReader(isr);
+		InputStreamReader isr= new InputStreamReader(fis);		
 		JSONParser jParser = new JSONParser();
 		JSONObject jFileObj = (JSONObject) jParser.parse(isr);
 		JSONObject jDataObj = (JSONObject) jFileObj.get(testCaseName);
 		String value = (String) jDataObj.get(key);
-		//LOG.debug("Testdate from file path -> "+TESTDATAFILEPATH+ System.lineSeparator()+"Key : "+key+", Value : "+value);
+		
 		return value;	
 	}
 
 	
-	
-	// Get Method with Headers
-	public Response get(String url, HashMap<String, String> headerMap) {
-		RequestSpecification request = RestAssured.given();
-
-		for (Map.Entry<String, String> entry : headerMap.entrySet()) {
-			request.header(entry.getKey(), entry.getValue());
-		}
-
-		Response response = request.get(url);
-		return response;
-	}
 
 }
