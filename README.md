@@ -14,6 +14,7 @@ Automation Framework to automate tests with selenium
 - Added the test report emailable-report.html to the repo after running the tests locally, just for reference
 
 - I could not understand the 2nd part of pokemon i.e "pokemon that are normal type or that one of their types is normal type". So I did not do it. The first part is done and have stored the urls in the list.
+- *I have created a Pokemon page and written the UI code(it's commented) just to see if it works via UI way. Please ignore the Pokemon page if you are looking only for API way.*
 
 
 *STEPS* - 
