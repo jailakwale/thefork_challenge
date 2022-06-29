@@ -20,6 +20,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import pages.MyPersonalInformationPage;
 import pages.PokemonPage;
 import utility.TestBase;
@@ -37,25 +41,29 @@ public class Pokemon extends TestBase {
 	SoftAssert softAssertion;
 	List<String> pokemonurls;
 
-	@BeforeMethod
-	public void launchApp() throws FileNotFoundException, IOException {
-		log.info("Launching browser");
-		driver = getDriver(browserName);
-		driver.get(PokemonURL);
-		driver.manage().window().maximize();
-		BasicConfigurator.configure(); // Configures the logs
-	}
+	/*
+	 * @BeforeMethod public void launchApp() throws FileNotFoundException,
+	 * IOException { log.info("Launching browser"); driver = getDriver(browserName);
+	 * driver.get(PokemonURL); driver.manage().window().maximize();
+	 * BasicConfigurator.configure(); // Configures the logs }
+	 */
 
 	@Test
 	public void accessPokemonAPI() throws IOException, ParseException {
-		pokemon = new PokemonPage(driver);
+
 		pokemonurls = new ArrayList<String>();
-		// Get the element's data in a string
-		String text = pokemon.getPokemonData();
+		// Get the element's data in a string by normal UI way
+		// pokemon = new PokemonPage(driver);		  
+		// String data = pokemon.getPokemonData();
+
+		RestAssured.baseURI = "https://pokeapi.co/api/v2/pokemon?limit=30";
+		RequestSpecification httpRequest = RestAssured.given();
+		Response response = httpRequest.get("");
+		System.out.println("Response Body is =>  " + response.asString());
 
 		// Create a JSON Parser object and parse the String
 		JSONParser parser = new JSONParser();
-		JSONObject json = (JSONObject) parser.parse(text);
+		JSONObject json = (JSONObject) parser.parse(response.asString());
 		System.out.println(json.get("results").getClass());
 		log.info("Parsed the String into JSON object");
 
@@ -72,25 +80,16 @@ public class Pokemon extends TestBase {
 			org.json.JSONObject object = array.getJSONObject(i);
 			// Adding the urls to the list
 			pokemonurls.add(object.getString("url"));
+			System.out.println(object.getString("url"));
 			log.info(object.getString("url"));
 		}
 
-		/*
-		 * RestAssured.baseURI = ""; // Get the RequestSpecification of the request
-		 * RequestSpecification httpRequest = RestAssured.given();
-		 * 
-		 * // Make a GET request call directly by using get method Response response =
-		 * httpRequest.get("");
-		 * 
-		 * // Response.asString method will directly return the content of the body as
-		 * String. System.out.println("Response Body is =>  " + response.asString());
-		 */
 	}
 
 	@AfterMethod
 	public void teardown() {
 		System.out.println("Test Execution Complete");
-		driver.quit();
+		// driver.quit();
 	}
 
 }
